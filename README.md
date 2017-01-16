@@ -34,7 +34,7 @@
 其他热门开源项目
 
 ### 同步
-
+---
 开源中国：[WeRead](http://git.oschina.net/lunfu/WeRead)
 
 ## 联系我
