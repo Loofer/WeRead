@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="org.loofer.weread"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+    <application
+        android:name="common.WEApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".mvp.ui.activity.SplashActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".mvp.ui.activity.HomeActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+
+        <activity
+            android:name=".mvp.ui.activity.AboutActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".mvp.ui.activity.TextDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".mvp.ui.activity.AudioDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".mvp.ui.activity.VideoDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".mvp.ui.activity.ArtActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".mvp.ui.activity.DailyActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".mvp.ui.activity.SettingActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
+
+        <service android:name=".widget.audioplayer.AudioPlayBackService">
+            <intent-filter>
+                <action android:name="org.loofer.weread.ACTION.PLAY_TOGGLE"/>
+                <action android:name="org.loofer.weread.ACTION.PLAY_NEXT"/>
+                <action android:name="org.loofer.weread.ACTION.PLAY_LAST"/>
+                <action android:name="org.loofer.weread.ACTION.STOP_SERVICE"/>
+            </intent-filter>
+        </service>
+
+        <!-- autolayout meta
+        将设计图的宽高配置后,配合AutoLauout控件使用,在设计图尺寸以外的其它尺寸手机上,也能达到和设计图一样的效果
+        -->
+        <meta-data
+            android:name="design_width"
+            android:value="1080"/>
+        <meta-data
+            android:name="design_height"
+            android:value="1920"/>
+        <!--glide配置-->
+        <meta-data
+            android:name="org.loofer.framework.widget.imageloader.glide.GlideConfiguration"
+            android:value="GlideModule"/>
+
+    </application>
+
+</manifest>

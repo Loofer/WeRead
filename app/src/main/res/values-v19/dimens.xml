@@ -1,0 +1,5 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- fragment中使用 用于沉浸式状态栏 -->
+    <dimen name="statusbar_view_height">25dp</dimen>
+</resources>
