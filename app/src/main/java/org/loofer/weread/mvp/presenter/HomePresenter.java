@@ -104,8 +104,6 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
                     public void call() {
                         if (mPage == 1)
                             mRootView.showLoading();//显示上拉刷新的进度条
-//                        else
-//                            mRootView.startLoadMore();
                     }
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())

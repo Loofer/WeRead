@@ -181,8 +181,8 @@ public class HomeActivity extends WEActivity<HomePresenter> implements HomeContr
     VerticalViewPager.OnPageChangeListener mOnPageChangeListener = new VerticalViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            if (mHomePagerAdapter.getCount() <= position + 2 && !mIsLoading) {
-                if (mIsLoading){
+            if (mHomePagerAdapter.getCount() <= position + 1 && !mIsLoading && positionOffset == 0.0f) {
+                if (mIsLoading) {
                     UiUtils.makeText("正在努力加载...");
                     return;
                 }
@@ -227,12 +227,12 @@ public class HomeActivity extends WEActivity<HomePresenter> implements HomeContr
     @Override
     public void showNoMore() {
         UiUtils.makeText("没有更多数据了");
-        mIsLoading =false;
+        mIsLoading = false;
     }
 
     @Override
     public void showOnFailure() {
-        mIsLoading =false;
+        mIsLoading = false;
         UiUtils.makeText("加载数据失败，请检查您的网络");
     }
 
@@ -266,7 +266,7 @@ public class HomeActivity extends WEActivity<HomePresenter> implements HomeContr
 
     @Override
     public void endLoadMore() {
-        mIsLoading =false;
+        mIsLoading = false;
     }
 
     @Override

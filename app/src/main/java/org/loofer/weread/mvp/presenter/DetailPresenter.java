@@ -7,6 +7,7 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import org.loofer.framework.base.AppManager;
 import org.loofer.framework.di.scope.ActivityScope;
 import org.loofer.framework.mvp.BasePresenter;
+import org.loofer.framework.utils.RxUtils;
 import org.loofer.framework.utils.SchedulerTransformer;
 import org.loofer.framework.widget.imageloader.ImageLoader;
 import org.loofer.rxerrorhandler.core.RxErrorHandler;
@@ -68,6 +69,7 @@ public class DetailPresenter extends BasePresenter<DetailContract.Model, DetailC
     public void getDetail(String itemId){
         mModel.getDetail("api", "getPost", itemId, 1)
                 .compose(new SchedulerTransformer<BaseJson<Detail>>())
+                .compose(RxUtils.<BaseJson<Detail>>bindToLifecycle(mRootView))
                 .subscribe(new Subscriber<BaseJson<Detail>>() {
                     @Override
                     public void onCompleted() {
