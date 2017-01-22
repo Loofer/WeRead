@@ -41,7 +41,7 @@ import static org.loofer.player.utils.CommonUtil.hideNavKey;
 
 /**
  * ============================================================
- * 版权： x x 版权所有（c）2016
+ * 版权： x x 版权所有（c）2017
  * <p>
  * 作者：Loofer
  * 版本：1.0

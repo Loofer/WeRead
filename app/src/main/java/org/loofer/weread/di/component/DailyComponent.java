@@ -2,7 +2,7 @@ package org.loofer.weread.di.component;
 
 
 import org.loofer.framework.di.scope.ActivityScope;
-import org.loofer.weread.di.module.HomeModule;
+import org.loofer.weread.di.module.DailyModule;
 import org.loofer.weread.mvp.ui.activity.DailyActivity;
 
 import common.AppComponent;
@@ -11,7 +11,7 @@ import dagger.Component;
 
 /**
  * ============================================================
- * 版权： x x 版权所有（c）2016
+ * 版权： x x 版权所有（c）2017
  *
  * 作者：Loofer
  * 版本：1.0
@@ -24,7 +24,7 @@ import dagger.Component;
  * ==========================================================
  */
 @ActivityScope
-@Component(modules = HomeModule.class, dependencies = AppComponent.class)
+@Component(modules = DailyModule.class, dependencies = AppComponent.class)
 public interface DailyComponent {
     void inject(DailyActivity activity);
 }

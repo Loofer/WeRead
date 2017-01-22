@@ -8,7 +8,6 @@ import android.view.View;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.loofer.framework.base.AppManager;
-import org.loofer.framework.base.DefaultAdapter;
 import org.loofer.framework.di.scope.ActivityScope;
 import org.loofer.framework.mvp.BasePresenter;
 import org.loofer.framework.utils.DeviceUtils;
@@ -21,7 +20,7 @@ import org.loofer.weread.mvp.model.entity.HomeItem;
 import org.loofer.weread.mvp.ui.activity.AudioDetailActivity;
 import org.loofer.weread.mvp.ui.activity.TextDetailActivity;
 import org.loofer.weread.mvp.ui.activity.VideoDetailActivity;
-import org.loofer.weread.mvp.ui.adapter.HomeAdapter;
+import org.loofer.weread.mvp.ui.adapter.HomePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,11 +64,11 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
     private RxPermissions mRxPermissions;
     private ImageLoader mImageLoader;
     private AppManager mAppManager;
-    private HomeAdapter mAdapter;
     private List<HomeItem> mHomeItemList = new ArrayList<>();
     private int mPage = 1;
     private String pageId = "0";
     private String lastItemCreateTime = "0";
+    private final HomePagerAdapter mHomePagerAdapter;
 
     @Inject
     public HomePresenter(HomeContract.Model model, HomeContract.View rootView
@@ -81,10 +80,13 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
         this.mRxPermissions = rxPermissions;
         this.mImageLoader = imageLoader;
         this.mAppManager = appManager;
-        mAdapter = new HomeAdapter(mHomeItemList);
-        mRootView.setAdapter(mAdapter);//设置Adapter
-        mAdapter.setOnItemClickListener(mOnRecyclerViewItemClickListener);
+
+        mHomePagerAdapter = new HomePagerAdapter(mHomeItemList);
+        mHomePagerAdapter.setOnItemClickListener(mOnItemClickListener);
+        mRootView.setAdapter(mHomePagerAdapter);//设置Adapter
+
     }
+
 
     public void getListByPage(final boolean pullToRefresh) {
         if (pullToRefresh) {
@@ -92,8 +94,8 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
             pageId = "0";
             lastItemCreateTime = "0";
         } else {
-            pageId = mAdapter.getLastItemId();
-            lastItemCreateTime = mAdapter.getLastItemCreateTime();
+            pageId = mHomePagerAdapter.getLastItemId();
+            lastItemCreateTime = mHomePagerAdapter.getLastItemCreateTime();
         }
         mModel.getListByPage(mPage, 0, pageId, DeviceUtils.getDeviceId(mApplication), lastItemCreateTime)
                 .subscribeOn(Schedulers.io())
@@ -102,8 +104,8 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
                     public void call() {
                         if (mPage == 1)
                             mRootView.showLoading();//显示上拉刷新的进度条
-                        else
-                            mRootView.startLoadMore();
+//                        else
+//                            mRootView.startLoadMore();
                     }
                 })
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -113,8 +115,8 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
                     public void call() {
                         if (mPage == 2)
                             mRootView.hideLoading();//隐藏上拉刷新的进度条
-                        else
-                            mRootView.endLoadMore();
+//                        else
+//                            mRootView.endLoadMore();
                     }
                 })
                 .compose(RxUtils.<List<HomeItem>>bindToLifecycle(mRootView))//使用RXlifecycle,使subscription和activity一起销毁
@@ -139,7 +141,7 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
                                        mHomeItemList.add(item);
                                    }
                                    mPage++;
-                                   mAdapter.notifyDataSetChanged();
+                                   mHomePagerAdapter.notifyDataSetChanged();
 //                            mRootView.updateListUI(baseJson.getData());
 //                                   } else {
 //                                       mRootView.showNoMore();
@@ -151,10 +153,9 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
 
     }
 
-    DefaultAdapter.OnRecyclerViewItemClickListener mOnRecyclerViewItemClickListener = new DefaultAdapter.OnRecyclerViewItemClickListener() {
+   HomePagerAdapter.OnItemClickListener mOnItemClickListener = new HomePagerAdapter.OnItemClickListener() {
         @Override
-        public void onItemClick(View view, Object data, int position) {
-            HomeItem item = (HomeItem) data;
+        public void onItemClick(HomeItem item, View itemView, int postion) {
             int model = Integer.valueOf(item.getModel());
             Intent intent;
             switch (model) {
@@ -185,6 +186,7 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
             }
         }
     };
+
 
     @Override
     public void onDestroy() {

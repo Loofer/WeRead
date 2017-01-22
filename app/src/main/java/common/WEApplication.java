@@ -1,14 +1,10 @@
 package common;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.loofer.framework.base.BaseApplication;
 import org.loofer.framework.di.module.GlobeConfigModule;
 import org.loofer.framework.http.GlobeHttpHandler;
@@ -119,19 +115,19 @@ public class WEApplication extends BaseApplication {
                     public Response onHttpResultResponse(String httpResult, Interceptor.Chain chain, Response response) {
                         //这里可以先客户端一步拿到每一次http请求的结果,可以解析成json,做一些操作,如检测到token过期后
                         //重新请求token,并重新执行请求
-                        try {
-                            if (!TextUtils.isEmpty(httpResult)) {
-                                JSONArray array = new JSONArray(httpResult);
-                                JSONObject object = (JSONObject) array.get(0);
-                                String login = object.getString("login");
-                                String avatar_url = object.getString("avatar_url");
-                                Timber.tag(TAG).w("result ------>" + login + "    ||   avatar_url------>" + avatar_url);
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            return response;
-                        }
+//                        try {
+//                            if (!TextUtils.isEmpty(httpResult)) {
+//                                JSONArray array = new JSONArray(httpResult);
+//                                JSONObject object = (JSONObject) array.get(0);
+//                                String login = object.getString("login");
+//                                String avatar_url = object.getString("avatar_url");
+//                                Timber.tag(TAG).w("result ------>" + login + "    ||   avatar_url------>" + avatar_url);
+//                            }
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                            return response;
+//                        }
 
 
                         //这里如果发现token过期,可以先请求最新的token,然后在拿新的token放入request里去重新请求

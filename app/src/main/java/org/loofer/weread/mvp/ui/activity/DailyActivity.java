@@ -17,8 +17,8 @@ import org.loofer.framework.base.DefaultAdapter;
 import org.loofer.framework.utils.UiUtils;
 import org.loofer.weread.R;
 import org.loofer.weread.di.component.DaggerDailyComponent;
-import org.loofer.weread.di.module.HomeModule;
-import org.loofer.weread.mvp.contract.HomeContract;
+import org.loofer.weread.di.module.DailyModule;
+import org.loofer.weread.mvp.contract.DailyContract;
 import org.loofer.weread.mvp.presenter.DailyPresenter;
 import org.loofer.weread.widget.HorizontalDividerItemDecoration;
 import org.loofer.weread.widget.home.PagingScrollHelper;
@@ -35,7 +35,7 @@ import static org.loofer.framework.utils.Preconditions.checkNotNull;
 
 /**
  * ============================================================
- * 版权： x x 版权所有（c）2016
+ * 版权： x x 版权所有（c）2017
  * <p>
  * 作者：Loofer
  * 版本：1.0
@@ -47,7 +47,7 @@ import static org.loofer.framework.utils.Preconditions.checkNotNull;
  * <p>
  * ==========================================================
  */
-public class DailyActivity extends WEActivity<DailyPresenter> implements HomeContract.View, SwipeRefreshLayout.OnRefreshListener {
+public class DailyActivity extends WEActivity<DailyPresenter> implements DailyContract.View, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.recyclerview_daily)
@@ -64,7 +64,7 @@ public class DailyActivity extends WEActivity<DailyPresenter> implements HomeCon
         DaggerDailyComponent
                 .builder()
                 .appComponent(appComponent)
-                .homeModule(new HomeModule(this)) //请将DailyModule()第一个首字母改为小写
+                .dailyModule(new DailyModule(this)) //请将DailyModule()第一个首字母改为小写
                 .build()
                 .inject(this);
     }

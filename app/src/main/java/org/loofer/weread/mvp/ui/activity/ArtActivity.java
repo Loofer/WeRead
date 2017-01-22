@@ -17,8 +17,8 @@ import org.loofer.framework.base.DefaultAdapter;
 import org.loofer.framework.utils.UiUtils;
 import org.loofer.weread.R;
 import org.loofer.weread.di.component.DaggerArtComponent;
-import org.loofer.weread.di.module.HomeModule;
-import org.loofer.weread.mvp.contract.HomeContract;
+import org.loofer.weread.di.module.ArtModule;
+import org.loofer.weread.mvp.contract.ArtContract;
 import org.loofer.weread.mvp.presenter.ArtPresenter;
 import org.loofer.weread.widget.HorizontalDividerItemDecoration;
 
@@ -46,7 +46,7 @@ import static org.loofer.framework.utils.Preconditions.checkNotNull;
  * ==========================================================
  */
 
-public class ArtActivity extends WEActivity<ArtPresenter> implements HomeContract.View, SwipeRefreshLayout.OnRefreshListener {
+public class ArtActivity extends WEActivity<ArtPresenter> implements ArtContract.View, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.recyclerview_art)
@@ -64,7 +64,7 @@ public class ArtActivity extends WEActivity<ArtPresenter> implements HomeContrac
         DaggerArtComponent
                 .builder()
                 .appComponent(appComponent)
-                .homeModule(new HomeModule(this)) //请将ArtModule()第一个首字母改为小写
+                .artModule(new ArtModule(this)) //请将ArtModule()第一个首字母改为小写
                 .build()
                 .inject(this);
     }

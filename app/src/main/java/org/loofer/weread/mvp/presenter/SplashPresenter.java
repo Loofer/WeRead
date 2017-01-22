@@ -48,7 +48,7 @@ import static org.loofer.framework.utils.DeviceUtils.NETTYPE_WIFI;
 
 /**
  * ============================================================
- * 版权： xx有限公司 版权所有（c）2016
+ * 版权： xx有限公司 版权所有（c）2017
  * <p>
  * 作者：Loofer
  * 版本：1.0

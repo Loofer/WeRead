@@ -12,7 +12,7 @@ import org.loofer.framework.utils.DeviceUtils;
 import org.loofer.framework.utils.RxUtils;
 import org.loofer.framework.utils.UiUtils;
 import org.loofer.rxerrorhandler.core.RxErrorHandler;
-import org.loofer.weread.mvp.contract.HomeContract;
+import org.loofer.weread.mvp.contract.DailyContract;
 import org.loofer.weread.mvp.model.entity.HomeItem;
 import org.loofer.weread.mvp.ui.activity.AudioDetailActivity;
 import org.loofer.weread.mvp.ui.activity.TextDetailActivity;
@@ -32,7 +32,7 @@ import rx.schedulers.Schedulers;
 
 /**
  * ============================================================
- * 版权： x x 版权所有（c）2016
+ * 版权： x x 版权所有（c）2017
  *
  * 作者：Loofer
  * 版本：1.0
@@ -45,7 +45,7 @@ import rx.schedulers.Schedulers;
  * ==========================================================
  */
 @ActivityScope
-public class DailyPresenter extends BasePresenter<HomeContract.Model, HomeContract.View> {
+public class DailyPresenter extends BasePresenter<DailyContract.Model, DailyContract.View> {
     private RxErrorHandler mErrorHandler;
     private Application mApplication;
     private DailyAdapter mAdapter;
@@ -57,7 +57,7 @@ public class DailyPresenter extends BasePresenter<HomeContract.Model, HomeContra
 
 
     @Inject
-    public DailyPresenter(HomeContract.Model model, HomeContract.View rootView
+    public DailyPresenter(DailyContract.Model model, DailyContract.View rootView
             , RxErrorHandler handler, Application application) {
         super(model, rootView);
         this.mErrorHandler = handler;

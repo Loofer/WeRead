@@ -2,22 +2,15 @@ package org.loofer.weread.mvp.ui.activity;
 
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.paginate.Paginate;
-import com.paginate.recycler.LoadingListItemCreator;
-
-import org.loofer.framework.base.DefaultAdapter;
+import org.loofer.framework.utils.LogUtils;
 import org.loofer.framework.utils.UiUtils;
 import org.loofer.slidingmenu.SlidingMenu;
 import org.loofer.weread.R;
@@ -26,9 +19,11 @@ import org.loofer.weread.di.module.HomeModule;
 import org.loofer.weread.event.Event;
 import org.loofer.weread.mvp.contract.HomeContract;
 import org.loofer.weread.mvp.presenter.HomePresenter;
+import org.loofer.weread.mvp.ui.adapter.HomePagerAdapter;
 import org.loofer.weread.mvp.ui.fragment.LeftMenuFragment;
 import org.loofer.weread.mvp.ui.fragment.RightMenuFragment;
-import org.loofer.weread.widget.home.PagingScrollHelper;
+import org.loofer.weread.widget.PagerAdapter;
+import org.loofer.weread.widget.VerticalViewPager;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 
@@ -56,8 +51,8 @@ import rx.functions.Action1;
  */
 public class HomeActivity extends WEActivity<HomePresenter> implements HomeContract.View, SwipeRefreshLayout.OnRefreshListener {
 
-    @BindView(R.id.recyclerview_home)
-    RecyclerView mRecyclerViewHome;
+    @BindView(R.id.verticalViewPager)
+    VerticalViewPager mVerticalViewPager;
     @BindView(R.id.swiperefreshLayout_home)
     SwipeRefreshLayout mSwipeRefreshLayoutHome;
 
@@ -67,14 +62,11 @@ public class HomeActivity extends WEActivity<HomePresenter> implements HomeContr
     Toolbar mCommonToolbar;
 
 
-    private Paginate mPaginate;
-    private boolean isLoadingMore;
-
     private SlidingMenu mSlidingMenu;
     private LeftMenuFragment mLeftMenu;
     private RightMenuFragment mRightMenu;
-    PagingScrollHelper scrollHelper = new PagingScrollHelper();
     private long mLastClickTime;
+    private HomePagerAdapter mHomePagerAdapter;
 
 
     @Override
@@ -104,9 +96,11 @@ public class HomeActivity extends WEActivity<HomePresenter> implements HomeContr
         mCommonToolbar.setNavigationIcon(R.drawable.column);
         mCommonToolbar.inflateMenu(R.menu.menu_main);
         mCommonToolbar.setBackgroundResource(R.drawable.shadow);
+        mSwipeRefreshLayoutHome.setOnRefreshListener(this);
         initMenu();
         initRecommend();
         mPresenter.getListByPage(true);
+
     }
 
 
@@ -178,94 +172,46 @@ public class HomeActivity extends WEActivity<HomePresenter> implements HomeContr
     }
 
     @Override
-    public void setAdapter(DefaultAdapter adapter) {
-        mRecyclerViewHome.setAdapter(adapter);
-        initRecycleView();
-        initPaginate();
+    public void setAdapter(final PagerAdapter adapter) {
+        mHomePagerAdapter = (HomePagerAdapter) adapter;
+        mVerticalViewPager.setAdapter(adapter);
+        mVerticalViewPager.setOnPageChangeListener(mOnPageChangeListener);
     }
 
-    private void initRecycleView() {
-        mSwipeRefreshLayoutHome.setOnRefreshListener(this);
-        configRecycleView(mRecyclerViewHome, new LinearLayoutManager(this));
-        scrollHelper.setUpRecycleView(mRecyclerViewHome);
-//        scrollHelper.setOnPageChangeListener(this);
-    }
+    VerticalViewPager.OnPageChangeListener mOnPageChangeListener = new VerticalViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            LogUtils.w("pos" + position + "positionOffset" + positionOffset + "positionOffsetPixels" + positionOffsetPixels);
 
-    private void configRecycleView(RecyclerView recyclerView, RecyclerView.LayoutManager layoutManager) {
-        recyclerView.setLayoutManager(layoutManager);
-        //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-    }
-
-
-    /**
-     * 开始加载更多
-     */
-    @Override
-    public void startLoadMore() {
-        isLoadingMore = true;
-    }
-
-    /**
-     * 介绍加载更多
-     */
-    @Override
-    public void endLoadMore() {
-        isLoadingMore = false;
-    }
-
-    /**
-     * 初始化Paginate,用于加载更多
-     */
-    private void initPaginate() {
-        if (mPaginate == null) {
-            Paginate.Callbacks callbacks = new Paginate.Callbacks() {
-                @Override
-                public void onLoadMore() {
-                    mPresenter.getListByPage(false);
-                }
-
-                @Override
-                public boolean isLoading() {
-                    return isLoadingMore;
-                }
-
-                @Override
-                public boolean hasLoadedAllItems() {
-                    return false;
-                }
-            };
-
-            mPaginate = Paginate.with(mRecyclerViewHome, callbacks)
-                    .setLoadingTriggerThreshold(0)
-                    .setLoadingListItemCreator(new LoadingListItemCreator() {
-                        @Override
-                        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_loading_more, parent, false);
-                            return new RecyclerView.ViewHolder(view) {
-                            };
-                        }
-
-                        @Override
-                        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-                        }
-                    })
-                    .build();
-            mPaginate.setHasMoreDataToLoad(false);
         }
-    }
+
+        @Override
+        public void onPageSelected(int position) {
+            setRefreshEnable(position == 0);
+            if (position == (mHomePagerAdapter.getHomeItemList().size() - 2)) {
+                mPresenter.getListByPage(false);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
 
     private void initRecommend() {
 
     }
 
-
     @Override
     public void onRefresh() {
         mPresenter.getListByPage(true);
+    }
+
+    @Override
+    public void setRefreshEnable(boolean enable) {
+        mSwipeRefreshLayoutHome.setEnabled(enable);
     }
 
     @Subscriber
