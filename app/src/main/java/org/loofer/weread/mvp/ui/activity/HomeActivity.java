@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.loofer.framework.utils.LogUtils;
 import org.loofer.framework.utils.UiUtils;
 import org.loofer.slidingmenu.SlidingMenu;
 import org.loofer.weread.R;
@@ -178,19 +177,24 @@ public class HomeActivity extends WEActivity<HomePresenter> implements HomeContr
         mVerticalViewPager.setOnPageChangeListener(mOnPageChangeListener);
     }
 
+    private boolean mIsLoading;
     VerticalViewPager.OnPageChangeListener mOnPageChangeListener = new VerticalViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            LogUtils.w("pos" + position + "positionOffset" + positionOffset + "positionOffsetPixels" + positionOffsetPixels);
+            if (mHomePagerAdapter.getCount() <= position + 2 && !mIsLoading) {
+                if (mIsLoading){
+                    UiUtils.makeText("正在努力加载...");
+                    return;
+                }
+                mPresenter.getListByPage(false);
+                mIsLoading = true;
+            }
 
         }
 
         @Override
         public void onPageSelected(int position) {
             setRefreshEnable(position == 0);
-            if (position == (mHomePagerAdapter.getHomeItemList().size() - 2)) {
-                mPresenter.getListByPage(false);
-            }
         }
 
         @Override
@@ -223,10 +227,12 @@ public class HomeActivity extends WEActivity<HomePresenter> implements HomeContr
     @Override
     public void showNoMore() {
         UiUtils.makeText("没有更多数据了");
+        mIsLoading =false;
     }
 
     @Override
     public void showOnFailure() {
+        mIsLoading =false;
         UiUtils.makeText("加载数据失败，请检查您的网络");
     }
 
@@ -256,6 +262,11 @@ public class HomeActivity extends WEActivity<HomePresenter> implements HomeContr
                         mSwipeRefreshLayoutHome.setRefreshing(true);
                     }
                 });
+    }
+
+    @Override
+    public void endLoadMore() {
+        mIsLoading =false;
     }
 
     @Override

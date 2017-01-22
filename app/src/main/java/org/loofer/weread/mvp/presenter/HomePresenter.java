@@ -115,8 +115,8 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
                     public void call() {
                         if (mPage == 2)
                             mRootView.hideLoading();//隐藏上拉刷新的进度条
-//                        else
-//                            mRootView.endLoadMore();
+                        else
+                            mRootView.endLoadMore();
                     }
                 })
                 .compose(RxUtils.<List<HomeItem>>bindToLifecycle(mRootView))//使用RXlifecycle,使subscription和activity一起销毁
