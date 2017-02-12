@@ -2,10 +2,9 @@ package org.loofer.framework.di.module;
 
 import android.app.Application;
 
-import com.tbruyelle.rxpermissions.RxPermissions;
-
 import org.loofer.framework.base.AppManager;
 import org.loofer.framework.http.RequestIntercept;
+import org.loofer.framework.utils.DataHelper;
 import org.loofer.rxerrorhandler.core.RxErrorHandler;
 import org.loofer.rxerrorhandler.handler.listener.ResponseErroListener;
 
@@ -13,13 +12,13 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import io.rx_cache.internal.RxCache;
 import io.victoralbertos.jolyglot.GsonSpeaker;
-import okhttp3.Cache;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -33,7 +32,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class ClientModule {
     private static final int TIME_OUT = 10;
-    public static final int HTTP_RESPONSE_DISK_CACHE_MAX_SIZE = 10 * 1024 * 1024;//缓存文件最大值为10Mb
     private AppManager mAppManager;
 
 
@@ -69,12 +67,11 @@ public class ClientModule {
      */
     @Singleton
     @Provides
-    OkHttpClient provideClient(OkHttpClient.Builder okHttpClient, Cache cache, Interceptor intercept
+    OkHttpClient provideClient(OkHttpClient.Builder okHttpClient, Interceptor intercept
             , List<Interceptor> interceptors) {
         OkHttpClient.Builder builder = okHttpClient
                 .connectTimeout(TIME_OUT, TimeUnit.SECONDS)
                 .readTimeout(TIME_OUT, TimeUnit.SECONDS)
-                .cache(cache)//设置缓存
                 .addNetworkInterceptor(intercept);
         if (interceptors != null && interceptors.size() > 0) {//如果外部提供了interceptor的数组则遍历添加
             for (Interceptor interceptor : interceptors) {
@@ -102,13 +99,6 @@ public class ClientModule {
 
     @Singleton
     @Provides
-    Cache provideCache(File cacheFile) {
-        return new Cache(cacheFile, HTTP_RESPONSE_DISK_CACHE_MAX_SIZE);//设置缓存路径和大小
-    }
-
-
-    @Singleton
-    @Provides
     Interceptor provideIntercept(RequestIntercept intercept) {
         return intercept;//打印请求信息的拦截器
     }
@@ -117,17 +107,29 @@ public class ClientModule {
     /**
      * 提供RXCache客户端
      *
-     * @param cacheDir 缓存路径
+     * @param cacheDirectory RxCache缓存路径
      * @return
      */
     @Singleton
     @Provides
-    RxCache provideRxCache(File cacheDir) {
+    RxCache provideRxCache(@Named("RxCacheDirectory") File cacheDirectory) {
         return new RxCache
                 .Builder()
-                .persistence(cacheDir, new GsonSpeaker());
+                .persistence(cacheDirectory, new GsonSpeaker());
     }
 
+
+    /**
+     * 需要单独给RxCache提供缓存路径
+     * 提供RxCache缓存地址
+     */
+    @Singleton
+    @Provides
+    @Named("RxCacheDirectory")
+    File provideRxCacheDirectory(File cacheDir) {
+        File cacheDirectory = new File(cacheDir, "RxCache");
+        return DataHelper.makeDirs(cacheDirectory);
+    }
 
     /**
      * 提供处理Rxjava错误的管理器
@@ -142,18 +144,6 @@ public class ClientModule {
                 .with(application)
                 .responseErroListener(listener)
                 .build();
-    }
-
-    /**
-     * 提供权限管理类,用于请求权限,适配6.0的权限管理
-     *
-     * @param application
-     * @return
-     */
-    @Singleton
-    @Provides
-    RxPermissions provideRxPermissions(Application application) {
-        return RxPermissions.getInstance(application);
     }
 
 

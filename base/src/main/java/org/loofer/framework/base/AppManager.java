@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import org.loofer.framework.R;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;
@@ -115,7 +114,7 @@ public class AppManager {
             return;
         }
         getCurrentActivity().startActivity(intent);
-        getCurrentActivity().overridePendingTransition(R.anim.slide_in_left,0);
+//        getCurrentActivity().overridePendingTransition(R.anim.slide_in_left,0);
     }
 
     /**

@@ -12,7 +12,6 @@ import com.zhy.autolayout.AutoFrameLayout;
 import com.zhy.autolayout.AutoLinearLayout;
 import com.zhy.autolayout.AutoRelativeLayout;
 
-import org.loofer.framework.R;
 import org.loofer.framework.mvp.BasePresenter;
 import org.simple.eventbus.EventBus;
 
@@ -135,7 +134,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends RxAppCompatA
     @Override
     public void finish() {
         super.finish();
-        this.overridePendingTransition(R.anim.slide_out_right,0);
+//        this.overridePendingTransition(R.anim.slide_out_right,0);
     }
 
     /**

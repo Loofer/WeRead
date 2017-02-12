@@ -144,10 +144,10 @@ public class AudioDetailActivity extends WEActivity<DetailPresenter> implements 
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         unRegister();
         mHandleProgress.removeCallbacks(runnable);
         mHandleProgress = null;
+        super.onDestroy();
     }
 
     @Override

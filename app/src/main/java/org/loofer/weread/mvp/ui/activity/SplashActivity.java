@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
+import com.tbruyelle.rxpermissions.RxPermissions;
+
 import org.loofer.framework.utils.StatusBarUtil;
 import org.loofer.framework.utils.UiUtils;
 import org.loofer.weread.R;
@@ -51,9 +53,11 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
     ImageView mWereadLogoIv;
     @BindView(R.id.publish_logo_iv)
     ImageView mPublishLogoIv;
+    private RxPermissions mRxPermissions;
 
     @Override
     protected void setupActivityComponent(AppComponent appComponent) {
+        mRxPermissions = new RxPermissions(this);
         DaggerSplashComponent
                 .builder()
                 .appComponent(appComponent)
@@ -66,7 +70,7 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
     @Override
     protected void setStatusBar() {
         FullScreencall();
-        StatusBarUtil.setTranslucentForImageView(this,mSplashImg);
+        StatusBarUtil.setTranslucentForImageView(this, mSplashImg);
     }
 
     @Override
@@ -95,28 +99,28 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
                 .setDuration(3000L)
                 .setInterpolator(new DecelerateInterpolator())
                 .setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                startActivity(intent);
-                finish();
-            }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-            }
-        }).start();
+                    }
+                }).start();
     }
 
     public Drawable InputStream2Drawable(InputStream is) {
@@ -141,6 +145,11 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
     }
 
     @Override
+    public RxPermissions getRxPermissions() {
+        return mRxPermissions;
+    }
+
+    @Override
     public void showMessage(@NonNull String message) {
         checkNotNull(message);
         UiUtils.SnackbarText(message);
@@ -155,6 +164,12 @@ public class SplashActivity extends WEActivity<SplashPresenter> implements Splas
     @Override
     public void killMyself() {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.mRxPermissions = null;
     }
 
 }

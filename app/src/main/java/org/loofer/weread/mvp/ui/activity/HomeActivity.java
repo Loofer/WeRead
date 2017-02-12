@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.loofer.framework.utils.UiUtils;
 import org.loofer.slidingmenu.SlidingMenu;
@@ -246,7 +245,7 @@ public class HomeActivity extends WEActivity<HomePresenter> implements HomeContr
                 super.onBackPressed();
             } else {
                 mLastClickTime = System.currentTimeMillis();
-                Toast.makeText(this, "再按一次退出", Toast.LENGTH_SHORT).show();
+                UiUtils.makeText("再按一次退出");
             }
 
         }

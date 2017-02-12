@@ -14,9 +14,9 @@ import com.bumptech.glide.module.GlideModule;
 import org.loofer.framework.utils.DataHelper;
 import org.loofer.framework.utils.UiUtils;
 
-/**
- * Created by jess on 16/4/15.
- */
+import java.io.File;
+
+
 public class GlideConfiguration implements GlideModule {
     public static final int IMAGE_DISK_CACHE_MAX_SIZE = 100 * 1024 * 1024;//图片缓存文件最大值为100Mb
 
@@ -26,7 +26,8 @@ public class GlideConfiguration implements GlideModule {
             @Override
             public DiskCache build() {
                 // Careful: the external cache directory doesn't enforce permissions
-                return DiskLruCacheWrapper.get(DataHelper.getCacheFile(UiUtils.getContext()), IMAGE_DISK_CACHE_MAX_SIZE);
+                File cacheDirectory = new File(DataHelper.getCacheFile(UiUtils.getContext()), "Glide");
+                return DiskLruCacheWrapper.get(DataHelper.makeDirs(cacheDirectory), IMAGE_DISK_CACHE_MAX_SIZE);
             }
         });
 

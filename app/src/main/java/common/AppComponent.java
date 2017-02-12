@@ -3,7 +3,6 @@ package common;
 import android.app.Application;
 
 import com.google.gson.Gson;
-import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.loofer.framework.base.AppManager;
 import org.loofer.framework.di.module.AppModule;
@@ -39,9 +38,6 @@ public interface AppComponent {
 
     //Rxjava错误处理管理类
     RxErrorHandler rxErrorHandler();
-
-    //用于请求权限,适配6.0的权限管理
-    RxPermissions rxPermissions();
 
     OkHttpClient okHttpClient();
 

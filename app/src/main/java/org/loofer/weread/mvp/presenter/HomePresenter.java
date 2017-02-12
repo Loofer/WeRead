@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 
-import com.tbruyelle.rxpermissions.RxPermissions;
-
 import org.loofer.framework.base.AppManager;
 import org.loofer.framework.di.scope.ActivityScope;
 import org.loofer.framework.mvp.BasePresenter;
@@ -34,16 +32,6 @@ import rx.schedulers.Schedulers;
 
 
 /**
- * 通过Template生成对应页面的MVP和Dagger代码,请注意输入框中输入的名字必须相同
- * 由于每个项目包结构都不一定相同,所以每生成一个文件需要自己导入import包名,可以在设置中设置自动导入包名
- * 请在对应包下按以下顺序生成对应代码,Contract->Model->Presenter->Activity->Module->Component
- * 因为生成Activity时,Module和Component还没生成,但是Activity中有它们的引用,所以会报错,但是不用理会
- * 继续将Module和Component生成完后,编译一下项目再回到Activity,按提示修改一个方法名即可
- * 如果想生成Fragment的相关文件,则将上面构建顺序中的Activity换为Fragment,并将Component中inject方法的参数改为此Fragment
- */
-
-
-/**
  * ============================================================
  * 版权： x x 版权所有（c）2016
  * <p>
@@ -61,7 +49,6 @@ import rx.schedulers.Schedulers;
 public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContract.View> {
     private RxErrorHandler mErrorHandler;
     private Application mApplication;
-    private RxPermissions mRxPermissions;
     private ImageLoader mImageLoader;
     private AppManager mAppManager;
     private List<HomeItem> mHomeItemList = new ArrayList<>();
@@ -71,16 +58,14 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
     private final HomePagerAdapter mHomePagerAdapter;
 
     @Inject
-    public HomePresenter(HomeContract.Model model, HomeContract.View rootView
-            , RxErrorHandler handler, Application application, RxPermissions rxPermissions
-            , ImageLoader imageLoader, AppManager appManager) {
+    public HomePresenter(HomeContract.Model model, HomeContract.View rootView,
+                         RxErrorHandler handler, Application application,
+                         ImageLoader imageLoader, AppManager appManager) {
         super(model, rootView);
         this.mErrorHandler = handler;
         this.mApplication = application;
-        this.mRxPermissions = rxPermissions;
         this.mImageLoader = imageLoader;
         this.mAppManager = appManager;
-
         mHomePagerAdapter = new HomePagerAdapter(mHomeItemList);
         mHomePagerAdapter.setOnItemClickListener(mOnItemClickListener);
         mRootView.setAdapter(mHomePagerAdapter);//设置Adapter
@@ -151,7 +136,7 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
 
     }
 
-   HomePagerAdapter.OnItemClickListener mOnItemClickListener = new HomePagerAdapter.OnItemClickListener() {
+    HomePagerAdapter.OnItemClickListener mOnItemClickListener = new HomePagerAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(HomeItem item, View itemView, int postion) {
             int model = Integer.valueOf(item.getModel());
@@ -190,10 +175,8 @@ public class HomePresenter extends BasePresenter<HomeContract.Model, HomeContrac
     public void onDestroy() {
         super.onDestroy();
         this.mErrorHandler = null;
-        this.mRxPermissions = null;
         this.mAppManager = null;
         this.mImageLoader = null;
         this.mApplication = null;
     }
-
 }
