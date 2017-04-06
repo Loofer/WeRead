@@ -30,7 +30,6 @@
 
 # 鸣谢
 
-[MVPArms](https://github.com/JessYanCoding/MVPArms)
 [Rxjava](https://github.com/ReactiveX/RxJava)
 [Dagger2](https://github.com/google/dagger)
 [RxAndroid](https://github.com/ReactiveX/RxAndroid)
