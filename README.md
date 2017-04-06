@@ -31,7 +31,16 @@
 # 鸣谢
 
 [MVPArms](https://github.com/JessYanCoding/MVPArms)
-其他热门开源项目
+[Rxjava](https://github.com/ReactiveX/RxJava)
+[Dagger2](https://github.com/google/dagger)
+[RxAndroid](https://github.com/ReactiveX/RxAndroid)
+[RxLifecycle](https://github.com/trello/RxLifecycle)
+[Butterknife](https://github.com/JakeWharton/butterknife)
+[AndroidEventBus](https://github.com/hehonghui/AndroidEventBus)
+[LeakCanary](https://github.com/square/leakcanary)
+[Retrofit](https://github.com/square/retrofit)
+[GLide](https://github.com/bumptech/glide)
+
 
 ### 同步
 ---
